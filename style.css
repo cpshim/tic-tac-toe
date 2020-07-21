@@ -1,0 +1,16 @@
+#content{
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 200px);
+    grid-template-rows: repeat(3, 200px);
+}
+
+.grid{
+    border: 1px solid black;
+    font-size: 80px;
+    text-align: center;
+    background-color: white;
+}

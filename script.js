@@ -62,31 +62,44 @@ const Game = (() => {
         return false;
     }
 
-    return {swapCurrentPlayer, getCurrentPlayer, checkGameOver};
+    function checkTie(){
+        let currentBoard = Gameboard.getBoard();
+        if (currentBoard.includes(null)){
+            return false;
+        }
+        return true;
+    }
+
+    return {swapCurrentPlayer, getCurrentPlayer, checkGameOver, checkTie};
 })();
 
-function render(){
-    const content = document.querySelector("#content");
-    content.innerHTML = "";
-
-    for (i = 0; i < Gameboard.getBoard().length; i++){
-        const square = document.createElement("button");
-        square.classList.add("grid");
-        square.setAttribute("data-index", `${i}`);
-        square.textContent = Gameboard.getBoard()[i];
-
-        square.addEventListener("click", () => {
-            if (Gameboard.isAvailable(square.getAttribute("data-index"))){
-                Gameboard.setPlayerTile(square.getAttribute("data-index"), 
-                    Game.getCurrentPlayer().sign);
-                Game.swapCurrentPlayer();
-            }
-            console.log(Game.checkGameOver());
-            render();
-        });
-
-        content.appendChild(square);
+const Display = (() => {
+    function render(){
+        const content = document.querySelector("#content");
+        content.innerHTML = "";
+    
+        for (i = 0; i < Gameboard.getBoard().length; i++){
+            const square = document.createElement("button");
+            square.classList.add("grid");
+            square.setAttribute("data-index", `${i}`);
+            square.textContent = Gameboard.getBoard()[i];
+    
+            square.addEventListener("click", () => {
+                if (Gameboard.isAvailable(square.getAttribute("data-index"))){
+                    Gameboard.setPlayerTile(square.getAttribute("data-index"), 
+                        Game.getCurrentPlayer().sign);
+                    Game.swapCurrentPlayer();
+                }
+                console.log(Game.checkGameOver());
+                console.log(Game.checkTie());
+                Display.render();
+            });
+    
+            content.appendChild(square);
+        }
     }
-}
+    
+    return {render};
+})();
 
-render();
+Display.render();

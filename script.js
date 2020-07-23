@@ -4,21 +4,41 @@ const Gameboard = (() => {
     const isAvailable = (index) => 
         board[index] == "X" || board[index] == "O" ? false:true;
     const setPlayerTile = (index, sign) => board[index] = sign;
-    const clearBoard = () => board = [null, null, null, null, null, null, null, null, null];
-
+    function clearBoard(){
+        board.length = 0;
+        board = [null, null, null, null, null, null, null, null, null];
+    }
+    
     return {getBoard, isAvailable, setPlayerTile, clearBoard};
 })();
 
-const Player = (sign) => {
+const Player = (name, sign) => {
     this.sign = sign;
+    this.name = name;
 
-    return {sign};
+    return {sign, name};
 };
 
 const Game = (() => {
-    const player1 = Player("X");
-    const player2 = Player("O");
-    let currentPlayer = player1;
+    const submitBtn = document.querySelector(".submit");
+    const popupBackground = document.querySelector(".popup-form-background");
+
+    let player1;
+    let player2;
+
+    let currentPlayer;
+
+    submitBtn.addEventListener("click", () => {
+        name1 = document.getElementById("p1").value;
+        name2 = document.getElementById("p2").value;
+
+        player1 = Player(name1, "X");
+        player2 = Player(name2, "O");
+
+        currentPlayer = player1;
+
+        popupBackground.setAttribute("style", "display:none");
+    });
 
     function swapCurrentPlayer(){
         if (currentPlayer == player1){
@@ -62,7 +82,7 @@ const Game = (() => {
         return false;
     }
 
-    function checkTie(){
+    function checkAllFull(){
         let currentBoard = Gameboard.getBoard();
         if (currentBoard.includes(null)){
             return false;
@@ -70,7 +90,7 @@ const Game = (() => {
         return true;
     }
 
-    return {swapCurrentPlayer, getCurrentPlayer, checkGameOver, checkTie};
+    return {swapCurrentPlayer, getCurrentPlayer, checkGameOver, checkAllFull};
 })();
 
 const Display = (() => {
@@ -90,14 +110,51 @@ const Display = (() => {
                         Game.getCurrentPlayer().sign);
                     Game.swapCurrentPlayer();
                 }
-                console.log(Game.checkGameOver());
-                console.log(Game.checkTie());
-                Display.render();
+                if (Game.checkGameOver()){
+                    showGameOver();
+                }
+                else if (Game.checkAllFull()){
+                    showTie();
+                }
+                render();
             });
     
             content.appendChild(square);
+
+            const reset = document.querySelector(".reset");
+            reset.addEventListener("click", () => {
+                Gameboard.clearBoard();
+                render();
+            });
         }
     }
+
+    function showGameOver(){
+        const gameoverMessage = document.querySelector(".popup-gameover-background");
+        const gameoverText = document.querySelector("#gameover-text");
+        //Current Player is swapped after last play so this swaps it back to winning player
+        Game.swapCurrentPlayer();
+        gameoverText.textContent = `${Game.getCurrentPlayer().name} has won!`;
+
+        gameoverMessage.setAttribute("style", "display: block");
+    }
+
+    function showTie(){
+        const gameoverMessage = document.querySelector(".popup-gameover-background");
+        const gameoverText = document.querySelector("#gameover-text");
+        //Current Player is swapped after last play so this swaps it back to winning player
+        gameoverText.textContent = `Game is tied!`;
+
+        gameoverMessage.setAttribute("style", "display: block");
+    }
+
+    const closeBtn = document.querySelector(".close");
+    closeBtn.addEventListener("click", () => {
+        Gameboard.clearBoard();
+        const gameoverMessage = document.querySelector(".popup-gameover-background");
+        gameoverMessage.setAttribute("style", "display: none");
+        render();
+    });
     
     return {render};
 })();

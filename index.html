@@ -3,10 +3,38 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet"> 
+        <title>Tic Tac Toe</title>
     </head>
     <main>
         <body>
+            <h1>TIC TAC TOE</h1>
             <div id="content"></div>
+            <div class="reset-div">
+                <button class="reset" type="button">Reset</button>
+            </div>
+
+            <div class="popup-form-background">
+                <div class="popup">
+                    <form>
+                        <p>Player 1 (X) Name:</p>
+                        <input id="p1" type="text">
+                        <p>Player 2 (O) Name:</p>
+                        <input id="p2" type="text">
+                        <div class="submit-div">
+                            <button class="submit" type="button">Submit</button>
+                        </div>
+                    </form>
+                    <div class="test"></div>
+                </div>
+            </div>
+
+            <div class="popup-gameover-background">
+                <div class="popup">
+                    <button class="close" type="button">X</button>
+                    <p id="gameover-text"></p>
+                </div>
+            </div>
         </body>
     </main>
     <script src="script.js"></script>
